@@ -722,7 +722,7 @@ def lineBot(op):
                             ret_ += "\n進群保護 開關"
                             if G.id in jg["JoinGroup"] : ret_+="\n進群保護 ✅"
                             else: ret_ += "\n進群保護 ❌"
-                        ret_ += "\n作者: 那暗戀
+                        ret_ += "\n作者:超音速
                         ret_ += "\nID: bestissac1234567890"
                         ret_ += "\nQR:http://line.me/ti/p/~bestissac1234567890"
                         ret_ += "\n<查詢完畢>"
