@@ -13,7 +13,7 @@ botStart = time.time()
 ####################################################
 
 ####################################################
-cl = LINE("chuanshou01@gmail.com","wang651215")
+cl = LINE("jackchen820@yahoo.com.tw","k1234567")
 ####################################################
 clMID = cl.profile.mid
 profile = cl.getProfile()
