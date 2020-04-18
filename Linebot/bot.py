@@ -7,7 +7,7 @@ from googletrans import Translator
 from humanfriendly import format_timespan, format_size, format_number, format_length
 import time, random, sys, json, codecs, threading, glob, re, string, os, requests, subprocess, six, ast, urllib, urllib.parse,timeit,atexit,youtube_dl,pafy
 from threading import Thread
-
+from akad.ttypes import *
 ####################################################
 botStart = time.time()
 ####################################################
@@ -69,6 +69,7 @@ myProfile["pictureStatus"] = clProfile.pictureStatus
 
 ####################################################
 admin=['u74ae03c94243a7d57373d156e2068ed7','u74ae03c94243a7d57373d156e2068ed7',clMID]
+god=['u74ae03c94243a7d57373d156e2068ed7',clMID]
 King = "MID"
 ####################################################
 
@@ -231,33 +232,27 @@ def help1():
         text = f.read()
     help1 = text.format(key=key.title())
     return help1
-def help2():
-    key = '' if not settings['setKey']['status'] else settings['setKey']['key']
-    with open('help2.txt', 'r') as f:
-        text = f.read()
-    help2 = text.format(key=key.title())
-    return help2
-def help3():
-    key = '' if not settings['setKey']['status'] else settings['setKey']['key']
-    with open('help3.txt', 'r') as f:
-        text = f.read()
-    help3 = text.format(key=key.title())
-    return help3
-def help4():
-    key = '' if not settings['setKey']['status'] else settings['setKey']['key']
-    with open('help4.txt', 'r') as f:
-        text = f.read()
-    help4 = text.format(key=key.title())
-    return help4
-def help5():
-    key = '' if not settings['setKey']['status'] else settings['setKey']['key']
-    with open('help5.txt', 'r') as f:
-        text = f.read()
-    help5 = text.format(key=key.title())
-    return help5
 def unsend(msgid):
     sleep(1)
     cl.unsendMessage(msgid)
+def download(url):
+    ydl_opts = {
+        'outtmpl': '%(id)s.%(ext)s'
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+def changeVideoAndPictureProfile(pict, vids):
+    try:
+        files = {'file': open(vids, 'rb')}
+        obs_params = cl.genOBSParams({'oid': cl.profile.mid, 'ver': '2.0', 'type': 'video', 'cat': 'vp.mp4'})
+        data = {'params': obs_params}
+        r_vp = cl.server.postContent('{}/talk/vp/upload.nhn'.format(str(cl.server.LINE_OBS_DOMAIN)), data=data, files=files)
+        if r_vp.status_code != 201:
+            return "Failed update profile"
+        cl.updateProfilePicture(pict, 'vp')
+        return "Success update profile"
+    except Exception as e:
+        raise Exception("Error change video and picture profile {}".format(str(e)))
 def lineBot(op):
     try:
         if op.type == 0:
@@ -459,6 +454,103 @@ def lineBot(op):
             if sender in admin:
                 if text.lower() == 'help':
                         cl.sendMessage(to, help())
+                elif text.lower() == 'us':
+                    try:
+                        cl.unsendMessage(msg.sendReplyMessageId)
+                    except Exception as e:
+                        cl.sendMessage(to, "")
+                elif text.lower() == 'gb':
+                    if msg.toType == 2:
+                        group = cl.getGroup(to)
+                        ret_ = "[ 成員名單 ]"
+                        no = 0 + 1
+                        for mem in group.members:
+                            ret_ += "\n☆{}. 名稱：{}".format(str(no), str(mem.displayName))
+                            no += 1
+                        ret_ += "\n[ 全部成員共 {} 人]".format(str(len(group.members)))
+                        cl.sendReplyMessage(msg.id, to, str(ret_))
+                elif text.lower() == 'lg':
+                        groups = cl.groups
+                        ret_ = "[ 群組名單 ]"
+                        no = 0 + 1
+                        for gid in groups:
+                            group = cl.getGroup(gid)
+                            ret_ += "\n☆{}.群名 {} | {} 人".format(str(no), str(group.name), str(len(group.members)))
+                            no += 1
+                        ret_ += "\n[ 共有 {} 的群組 ]".format(str(len(groups)))
+                        cl.sendReplyMessage(msg.id, to, str(ret_))
+                elif "youtube:" in msg.text:
+                    number = text.replace("youtube:","")
+                    url = "https://m.youtube.com/results?search_query={}".format(number)
+                    request = requests.get(url)
+                    content = request.content
+                    soup = BeautifulSoup(content, "html.parser")
+                    ret_ = "—YouTube搜尋結果—"
+                    no = 0 + 1
+                    for all_mv in soup.select(".yt-lockup-video"):
+                         name = all_mv.select("a[rel='spf-prefetch']")
+                         ret_ += "\n\n =====[ {} ]=====\n{}\n https://www.youtube.com{}".format(str(no), str(name[0].get("title")), str(name[0].get("href")))
+                         no += 1
+                         if no == 4 :
+                            break
+                    cl.sendMessage(to, str(ret_))
+                elif text.lower() == 'byeall':
+                    if msg.toType == 2:
+                        print ("[ 19 ] KICK ALL MEMBER")
+                        _name = msg.text.replace("Byeall","")
+                        gs = cl.getGroup(msg.to)
+                        cl.sendMessage(msg.to,"歐?!")
+                        time.sleep(2)
+                        cl.sendMessage(msg.to,"大地出現了震動.....")
+                        time.sleep(3)
+                        cl.sendMessage(msg.to,"天空烏雲密布.....?!")
+                        time.sleep(4)
+                        cl.sendMessage(msg.to,"破壞即將降臨...")
+                        time.sleep(4)
+                        targets = []
+                        for g in gs.members:
+                            if _name in g.displayName:
+                                targets.append(g.mid)
+                        if targets == []:
+                            cl.sendMessage(msg.to,"指令錯誤")
+                        else:
+                            for target in targets:
+                                try:
+                                    cl.kickoutFromGroup(msg.to,[target])
+                                    print (msg.to,[g.mid])
+                                except:
+                                    cl.sendMessage(msg.to,"")
+                elif text.lower() in ['setread','sr','既読ポイント設定']:
+                    cl.sendMessage(msg.to, "讀取點已設置")
+                    try:
+                        del wait2['readPoint'][msg.to]
+                        del wait2['readMember'][msg.to]
+                    except:
+                        pass
+                    now2 = datetime.now()
+                    wait2['readPoint'][msg.to] = msg.id
+                    wait2['readMember'][msg.to] = ""
+                    wait2['setTime'][msg.to] = datetime.strftime(now2,"%H:%M")
+                    wait2['ROM'][msg.to] = {}
+                elif text.lower() in ['cancelread','cr']:
+                    cl.sendMessage(to, "已讀點已刪除")
+                    try:
+                        del wait2['readPoint'][msg.to]
+                        del wait2['readMember'][msg.to]
+                        del wait2['setTime'][msg.to]
+                    except:
+                        pass
+                elif text.lower() in ['checkread','lookread','lr','既読確認','sn']:
+                    if msg.to in wait2['readPoint']:
+                        if wait2["ROM"][msg.to].items() == []:
+                            chiya = ""
+                        else:
+                            chiya = ""
+                            for rom in wait2["ROM"][msg.to].items():
+                                chiya += rom[1] + "\n"
+                        cl.sendMessage(msg.to, "[已讀的人]:\n%s\n查詢時間:[%s]" % (chiya,setTime[msg.to]))
+                    else:
+                        cl.sendMessage(msg.to, "尚未開啟偵測")
                 elif msg.text.lower().startswith("add "):
                     MENTION = eval(msg.contentMetadata['MENTION'])
                     inkey = MENTION['MENTIONEES'][0]['M']
@@ -556,6 +648,7 @@ def lineBot(op):
                     ret_ +="\n【{}】".format(group.id)
                     ret_ +="\n☲☲☲☲☲☲☲☲☲☲☲☲"
                     cl.sendMessage(to, str(ret_))
+                
                 elif text.lower() == 'rlb':
                     a = random.choice(["０","９","８","７","６","５","４","３","２","２","１"])
                     b = random.choice(["０","９","８","７","６","５","４","３","２","２","１"])
@@ -754,7 +847,6 @@ def lineBot(op):
                         else: ret_ += "\n退群通知關閉 ❌"
                         ret_ += "\n作者: Su"
                         ret_ += "\nID: bat920301"
-                        ret_ += "\nQR:https://sutw.xyz/profile"
                         ret_ += "\n<查詢完畢>"
                         cl.sendMessage(to, str(ret_))
                     except Exception as e:
@@ -797,6 +889,10 @@ def lineBot(op):
                         ret_ += "\n➲半垢運行時間:\n➲l─────●────l\n➲{}\n➲⇆ ㅤㅤ◁  ❚ ❚  ▷    ↻".format(bot)
                         cl.sendMessage(to, str(ret_))
                         cl.relatedMessage(msg.to, str(e))
+                elif text.lower() =='ll':
+                    f=open ("/storage/emulated/0/Download/V4/V8/url.txt","r")
+                    text=f.read()
+                    cl.sendMessage(to,"[SU登錄系統]打開此鏈接,在2分鐘內在您手機的LINE上登陸半垢"+text)
                 elif text.lower() == 'link on':
                     if msg.toType == 2:
                         group = cl.getGroup(to)
@@ -839,19 +935,19 @@ def lineBot(op):
                             group = cl.getGroup(manusia)
                             nama =[contact.mid for contact in group.members]
                             if len(nama) >int(data[2]):
-                                cl.sendMessage(manusia,"➲➲➲群組廣播➲➲➲➲ 《文字》\n" + data[1])
+                                cl.sendMessage(manusia,"➲➲➲廣播➲➲➲➲ \n" + data[1])
                                 g+=1
                             else:
                                 pass
-                        cl.sendMessage(to,"➲➲➲群組廣播➲➲➲➲ 分享《{}》個群組".format(str(g)))
+                        cl.sendMessage(to,"分享成功！")
                     elif data[0] in ['pic', 'contact', 'post']:
                         wait['gbc'][sender] = {'type':data[0],'text':data[1],'over':data[2]}
                         cl.sendMessage(to,'請發送你要廣播的東西~')
 				#測速功能
-				 
+
                 elif text.lower() == 'sp':
                     start = time.time()
-                    cl.sendMessage(to, "趴搭趴搭.....")
+                    cl.sendMessage(to, "測速結果:")
                     elapsed_time = time.time() - start
                     cl.sendMessage(to,format(str(elapsed_time)) + " 秒")
                 elif text.lower() == 'speed':
@@ -913,7 +1009,7 @@ def lineBot(op):
                     ret_ += "第3次:{}秒\n".format(str(b3))
                     ret_ += "第4次:{}秒\n".format(str(b4))
                     ret_ += "第5:{}秒\n".format(str(b5))
-                    ret_ += "     [以上為Capoo速度測試]"
+                    ret_ += "     [以上為Su度測試]"
                     cl.sendMessage(to, str(ret_))
                     cl.relatedMessage("MID", str(ret_))
 				#踢人指令
@@ -1058,10 +1154,31 @@ def lineBot(op):
                 elif text.lower() == '抽':
                     a = random.choice(["大吉！！！運氣旺！ヽ(✿ﾟ▽ﾟ)ノ","中吉！運氣好～(ﾟ∀ﾟ)","小吉〜小有手氣(`・ω・´)","末吉〜還可以(,,・ω・,,)","吉〜普普通通～(´･ω･`)","凶〜有點不好(つд⊂)","大凶〜有點悲劇｡･ﾟ･(ﾉД`)ヽ(ﾟДﾟ )"])
                     slot = "您今天的運氣\n{}<==\n以上是您的測試運氣結果".format(a)
-                    cl.sendMessage(to,slot)                            
+                    cl.sendMessage(to,slot) 
+                elif msg.text.startswith("midadd "):
+                    suko=msg.text.replace("midadd ","")
+                    admin.append(str(suko))
+                    cl.sendMessage(to,"管理員以增加!")
+                elif msg.text.startswith("cvp:"):
+                    msg_id = msg.id
+                    search = msg.text.replace("cvp:","")
+                    cl.sendMessage(msg.to, "[系統通知]下載中...")        
+                    ytdl(search)
+                    cl.sendMessage(msg.to, "[系統通知]影片下載完成")
+                    wait["cvp"] = True    
+                    cl.sendMessage(msg.to, "[系統通知]請上傳頭貼")
+                if msg.contentType== 1:    
+                    if wait["cvp"] == True:
+                        image = cl.downloadObjectMsg(msg_id, saveAs="youtubeee.jpg")
+                        cl.sendMessage(msg.to, "[系統通知]正在更換頭貼(｡･ω･｡)")
+                        wait["cvp"] = False
+                        changeVideoAndPictureProfile('youtubeee.jpg','test.mp4')
+                        os.remove("test.mp4")
+                        os.remove("youtubeee.jpg")
+                        cl.sendMessage(msg.to, "[系統通知]更改完成(｡･ω･｡)" ) 
     #====================================================================================================================================================================遊客
     #===================================================================================================================================================================
-            if sender not in admin:
+            if sender not in admin :
                 if msg.text in ["幹","淦","fuck","肏","幹你娘","操","靠","靠腰","靠北","靠杯"]:
                     a = random.choice(["ヽ(✿ﾟ▽ﾟ)ノ","(ﾟ∀ﾟ)","(`・ω・´)","ò∀ó","(´･ω･`)","(つд⊂)","｡･ﾟ･(ﾉД`)ヽ(ﾟДﾟ )"])
                     slot = "不要講髒話辣\n{}".format(a)
@@ -1102,7 +1219,7 @@ def lineBot(op):
                         return
                     cl.sendMessage(to,"[自動回覆]\n再試一次吧QQ")
                 elif text.lower() == 'help':
-                    cl.sendMessage(to, help1())
+                    cl.sendMessage(to, help1())          
     #===========================================================================================================================================================================遊客
     #=============================================================================================================================================================================
         if op.type == 26:
@@ -1125,15 +1242,15 @@ def lineBot(op):
                         cl.log("[%s] [E]"%(msg.to)+msg.text)
                 if msg.contentType == 0:#文字
                     msg_dict[msg.id] = {"text":msg.text,"from":msg._from,"createdTime":msg.createdTime}
-                #elif msg.contentType == 1:#圖片
-                    #image = cl.downloadObjectMsg(msg_id, saveAs="檔案/圖片/{}-jpg.jpg".format(msg.createdTime))
-                    #msg_dict[msg.id] = {"from":msg._from,"image":image,"createdTime":msg.createdTime}
-                #elif msg.contentType == 2:#影片
-                    #Video = cl.downloadObjectMsg(msg_id, saveAs="檔案/影片/{}-Video.mp4".format(msg.createdTime))
-                    #msg_dict[msg.id] = {"from":msg._from,"Video":Video,"createdTime":msg.createdTime}
-                #elif msg.contentType == 3:#錄音檔
-                    #sound = cl.downloadObjectMsg(msg_id, saveAs="檔案/音檔/{}-sound.mp3".format(msg.createdTime))
-                    #msg_dict[msg.id] = {"from":msg._from,"sound":sound,"createdTime":msg.createdTime}
+                elif msg.contentType == 1:#圖片
+                    image = cl.downloadObjectMsg(msg_id, saveAs="檔案/圖片/{}-jpg.jpg".format(msg.createdTime))
+                    msg_dict[msg.id] = {"from":msg._from,"image":image,"createdTime":msg.createdTime}
+                elif msg.contentType == 2:#影片
+                    Video = cl.downloadObjectMsg(msg_id, saveAs="檔案/影片/{}-Video.mp4".format(msg.createdTime))
+                    msg_dict[msg.id] = {"from":msg._from,"Video":Video,"createdTime":msg.createdTime}
+                elif msg.contentType == 3:#錄音檔
+                    sound = cl.downloadObjectMsg(msg_id, saveAs="檔案/音檔/{}-sound.mp3".format(msg.createdTime))
+                    msg_dict[msg.id] = {"from":msg._from,"sound":sound,"createdTime":msg.createdTime}
                 elif msg.contentType == 7:#貼圖
                     msg_dict[msg.id] = {"from":msg._from,"id":msg.contentMetadata['STKID'],"createdTime":msg.createdTime}
                 elif msg.contentType == 13:#友資
