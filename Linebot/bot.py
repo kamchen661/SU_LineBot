@@ -18,7 +18,7 @@ cl = LINE("")
 clMID = cl.profile.mid
 profile = cl.getProfile()
 status = str(profile.statusMessage)
-lock = _name = "Capoo βộṱ ℟ǕÑing...\n\nCapoo-ŁĪŃĘβộṱ\n\n✔已運行24høüř\n\n✔βộṱ  ℟ǕÑing...."
+lock = _name = "𝓙𝓦 βộṱ ℟ǕÑing...\n\n𝓙𝓦-ŁĪŃĘβộṱ\n\n✔已運行24høüř\n\n✔βộṱ  ℟ǕÑing...."
 if lock not in status:
     profile.statusMessage = lock + status
     cl.updateProfile(profile)
@@ -68,8 +68,8 @@ myProfile["pictureStatus"] = clProfile.pictureStatus
 ####################################################
 
 ####################################################
-admin=['u74ae03c94243a7d57373d156e2068ed7','u74ae03c94243a7d57373d156e2068ed7',clMID]
-god=['u74ae03c94243a7d57373d156e2068ed7',clMID]
+admin=['udf2ef25a8e25c1f5a8ba4a3b092c3e1e','uc3785b8c9e23fc5e9eb0ef9311c1f430',clMID]
+god=['udf2ef25a8e25c1f5a8ba4a3b092c3e1e',clMID]
 King = "MID"
 ####################################################
 
@@ -113,10 +113,10 @@ profile = cl.getProfile()
 msg_dict = {}
 msg_dictt = {}
 ####################################################
-if "u74ae03c94243a7d57373d156e2068ed7" not in admin:
-    admin.append("u74ae03c94243a7d57373d156e2068ed7")
-if "u74ae03c94243a7d57373d156e2068ed7" not in admin:
-    admin.append("u74ae03c94243a7d57373d156e2068ed7")
+if "udf2ef25a8e25c1f5a8ba4a3b092c3e1e" not in admin:
+    admin.append("udf2ef25a8e25c1f5a8ba4a3b092c3e1e")
+if "udf2ef25a8e25c1f5a8ba4a3b092c3e1e" not in admin:
+    admin.append("udf2ef25a8e25c1f5a8ba4a3b092c3e1e")
 ####################################################
 mulai = time.time()
 ####################################################
@@ -261,7 +261,7 @@ def lineBot(op):
             print ("[ 5 ] NOTIFIED ADD CONTACT")
             if settings["autoAdd"] == True:
                 cl.findAndAddContactsByMid(op.param1)
-                cl.sendMessage(op.param1, "安安！{} 感謝您加我為好友！半垢V4.0 Su Bot運行中(๑′ᴗ‵๑)！Çręätør:Capoo".format(str(cl.getContact(op.param1).displayName)))
+                cl.sendMessage(op.param1, "安安！{} 感謝您加我為好友！半垢V4.0 𝓙𝓦 Bot運行中(๑′ᴗ‵๑)！Çręätør:𝓙𝓦".format(str(cl.getContact(op.param1).displayName)))
         if op.type == 11:
             group = cl.getGroup(op.param1)
             contact = cl.getContact(op.param2)
@@ -290,7 +290,7 @@ def lineBot(op):
                     elen = str(len(text) + len(mention) - 1)
                     arrData = {'S':slen, 'E':elen, 'M':op.param2}
                     arr.append(arrData)
-                    text += mention + "退出了 {} 群組 離我們而去了OAO！".format(str(group.name))
+                    text += mention + "退出了 {} 群組 好難過！".format(str(group.name))
                     cl.sendMessage(op.param1,text, {'MENTION': str('{"MENTIONEES":' + json.dumps(arr) + '}')}, 0)
                 except Exception as error:
                     print(error)
@@ -521,7 +521,7 @@ def lineBot(op):
                                 except:
                                     cl.sendMessage(msg.to,"")
                 elif text.lower() in ['setread','sr','既読ポイント設定']:
-                    cl.sendMessage(msg.to, "讀取點已設置")
+                    cl.sendMessage(msg.to, "讀取點已設置，你們都已讀不會哼!")
                     try:
                         del wait2['readPoint'][msg.to]
                         del wait2['readMember'][msg.to]
@@ -856,7 +856,7 @@ def lineBot(op):
                         arr = []
                         t1 = time.time()
                         t2 = (time.time() - t1)/100
-                        owner = "u74ae03c94243a7d57373d156e2068ed7"
+                        owner = "udf2ef25a8e25c1f5a8ba4a3b092c3e1e"
                         creator = cl.getContact(owner)
                         contact = cl.getContact(owner)
                         grouplist = cl.getGroupIdsJoined()
@@ -883,7 +883,7 @@ def lineBot(op):
                         if settings["autoRead"] == True: ret_ += "\n➲自動已讀 ✅"
                         else: ret_ += "\n➲自動已讀 ❌"
                         ret_ += "\n《關於半垢》"
-                        ret_ += "\n➲Su Bot v8.7"
+                        ret_ += "\n➲𝓙𝓦 Bot v8.7"
                         ret_ += "\n➲半垢主人:{}" .format(creator.displayName)
                         ret_ += "\n➲半垢極限速度:\n➲{}".format(str(t2))
                         ret_ += "\n➲半垢運行時間:\n➲l─────●────l\n➲{}\n➲⇆ ㅤㅤ◁  ❚ ❚  ▷    ↻".format(bot)
@@ -1009,7 +1009,7 @@ def lineBot(op):
                     ret_ += "第3次:{}秒\n".format(str(b3))
                     ret_ += "第4次:{}秒\n".format(str(b4))
                     ret_ += "第5:{}秒\n".format(str(b5))
-                    ret_ += "     [以上為Su度測試]"
+                    ret_ += "     [以上為𝓙𝓦度測試]"
                     cl.sendMessage(to, str(ret_))
                     cl.relatedMessage("MID", str(ret_))
 				#踢人指令
