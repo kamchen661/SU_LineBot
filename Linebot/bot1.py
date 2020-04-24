@@ -779,7 +779,7 @@ def lineBot(op):
                         else: ret_ += "\n➲自動已讀 ❌"
                         ret_ += "\n《關於半垢》"
                         ret_ += "\n➲商業半垢 V5.2"
-                        ret_ += "\n➲半垢作者:超音速
+                        ret_ += "\n➲半垢作者:超音速"
                         ret_ += "\n➲半垢極限速度:\n➲{}".format(str(t2))
                         ret_ += "\n➲半垢運行時間:\n➲l───────●──────l\n➲{}\n➲⇆ ㅤ ㅤ◁  ㅤ❚ ❚  ㅤ▷  ㅤ↻".format(bot)
                         cl.relatedMessage(to, str(ret_),op.message.id)
